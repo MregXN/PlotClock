@@ -10,6 +10,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "ds1302.h"
+#include "pwm.h"
 
 
 
@@ -51,6 +52,7 @@ int main(void)
 	KEY_Init();							//初始化按键
 	LCD_Init();							//初始化LCD
 	mem_init(); 	//初始化内部内存池
+	TIM1_PWM_Init(899,0);//不分频。PWM频率=72000/(899+1)=80Khz 
 	
 	DS1302_GPIOInit();
 	Delay_xms(50);
@@ -98,11 +100,17 @@ void start_task(void *pvParameters)
 //task1任务函数
 void task1_task(void *pvParameters)
 {
-	while(1)
+	u16 led0pwmval=0;    
+	u8 dir=1;	
+		while(1)
 	{
-		LED0=!LED0;
-        vTaskDelay(500);             	//延时500ms，也就是500个时钟节拍	
-	}
+ 		vTaskDelay(10);	 
+		if(dir)led0pwmval++;
+		else led0pwmval--;	 
+ 		if(led0pwmval>300)dir=0;
+		if(led0pwmval==0)dir=1;	   					 
+		TIM_SetCompare1(TIM1,led0pwmval);	   
+	} 
 }
 
 //DS1302_task函数
