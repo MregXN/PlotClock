@@ -1,16 +1,14 @@
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
-#include "led.h"
 #include "timer.h"
-#include "lcd.h"
-#include "key.h"
 #include "malloc.h"
 #include "string.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "ds1302.h"
 #include "pwm.h"
+#include "write.h"
 
 
 
@@ -24,13 +22,13 @@ TaskHandle_t StartTask_Handler;
 void start_task(void *pvParameters);
 
 //任务优先级
-#define TASK1_TASK_PRIO		3
+#define WRITE_TASK_PRIO		3
 //任务堆栈大小	
-#define TASK1_STK_SIZE 		256  
+#define WRITE_STK_SIZE 		256  
 //任务句柄
-TaskHandle_t Task1Task_Handler;
+TaskHandle_t WriteTask_Handler;
 //任务函数
-void task1_task(void *pvParameters);
+void write_task(void *pvParameters);
 
 //任务优先级
 #define DS1302_TASK_PRIO 2
@@ -48,20 +46,15 @@ int main(void)
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);//设置系统中断优先级分组4	 
 	delay_init();	    				//延时函数初始化	 
 	uart_init(115200);					//初始化串口
-	LED_Init();		  					//初始化LED
-	KEY_Init();							//初始化按键
-	LCD_Init();							//初始化LCD
+
 	mem_init(); 	//初始化内部内存池
-	TIM1_PWM_Init(899,0);//不分频。PWM频率=72000/(899+1)=80Khz 
+	TIM8_PWM_Init(719,1999);//2000分频，获得周期约20ms的PWM脉冲
 	
 	DS1302_GPIOInit();
 	Delay_xms(50);
 	ds1302_init(); 
 	Delay_xms(50);
 	ds1302_write_time(); 
-
-	POINT_COLOR=RED;
-  LCD_ShowString(10,10,200,16,16,"Plot Clock ");	
 
 	
 	//创建开始任务
@@ -79,13 +72,13 @@ void start_task(void *pvParameters)
 {
     taskENTER_CRITICAL();           //进入临界区
 	
-    //创建TASK1任务
-    xTaskCreate((TaskFunction_t )task1_task,             
-                (const char*    )"task1_task",           
-                (uint16_t       )TASK1_STK_SIZE,        
+    //创建WRITE任务
+    xTaskCreate((TaskFunction_t )write_task,             
+                (const char*    )"WRITE_task",           
+                (uint16_t       )WRITE_STK_SIZE,        
                 (void*          )NULL,                  
-                (UBaseType_t    )TASK1_TASK_PRIO,        
-                (TaskHandle_t*  )&Task1Task_Handler);   
+                (UBaseType_t    )WRITE_TASK_PRIO,        
+                (TaskHandle_t*  )&WriteTask_Handler);   
     //创建TASK2任务
     xTaskCreate((TaskFunction_t )DS1302_task,     
                 (const char*    )"ds1302_task",   
@@ -97,23 +90,20 @@ void start_task(void *pvParameters)
     taskEXIT_CRITICAL();            //退出临界区
 }
 
-//task1任务函数
-void task1_task(void *pvParameters)
+//WRITE任务函数
+void write_task(void *pvParameters)
 {
-	u16 led0pwmval=0;    
-	u8 dir=1;	
-		while(1)
+
+   	while(1)
 	{
- 		vTaskDelay(10);	 
-		if(dir)led0pwmval++;
-		else led0pwmval--;	 
- 		if(led0pwmval>300)dir=0;
-		if(led0pwmval==0)dir=1;	   					 
-		TIM_SetCompare1(TIM1,led0pwmval);	   
+ 		vTaskDelay(500);  				 
+		leftHand_Rotate(0);
+		rightHand_Rotate(180);
+		liftHand_Rotate(45);
 	} 
 }
 
-//DS1302_task函数
+//DS1302_task任务函数
 void DS1302_task(void *pvParameters)
 {
 
@@ -129,7 +119,7 @@ void DS1302_task(void *pvParameters)
 				readtime[10],readtime[11],\
 				readtime[12],readtime[13]);
 		
-		vTaskDelay(6000); 
+		vTaskDelay(1000); 
 	}
 }
 

@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\MALLOC;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\LCD;..\HARDWARE\TIMER;..\HARDWARE\EXTI;..\HARDWARE\KEY</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\MALLOC;..\FreeRTOS\include;..\FreeRTOS\portable\RVDS\ARM_CM3;..\HARDWARE\LED;..\HARDWARE\LCD;..\HARDWARE\TIMER;..\HARDWARE\EXTI;..\HARDWARE\KEY;..\HARDWARE\DS1302;..\HARDWARE\PWM</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -429,24 +429,19 @@
           <GroupName>HARDWARE</GroupName>
           <Files>
             <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LED\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\lcd.c</FilePath>
-            </File>
-            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\TIMER\timer.c</FilePath>
             </File>
             <File>
-              <FileName>key.c</FileName>
+              <FileName>ds1302.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HARDWARE\KEY\key.c</FilePath>
+              <FilePath>..\HARDWARE\DS1302\ds1302.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\PWM\pwm.c</FilePath>
             </File>
           </Files>
         </Group>
