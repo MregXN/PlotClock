@@ -13,6 +13,7 @@
 - keil5 打开工程
 - JLINK 烧录代码 
 - 接线方式： 
+    
     DS1302： RST （PA5）  IO（ PA6）  SCK （PA7） +5V 供电 
     
     舵机： 左臂（PC6） 右臂（PC7） 抬臂（PC8） +5V供电
