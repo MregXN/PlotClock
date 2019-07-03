@@ -2,7 +2,7 @@
 
 
 
-# PlotClock
+<h1 align = "center">PlotClock</h1> 
 
 用超丑的字体报时。利用STM32F103RC主控，DS1302获取时间，9g舵机驱动手臂，内部跑了freertos系统，具体的制作流程可参考[Blogs](https://github.com/MregXN/Blogs/issues/3)。
 
@@ -13,7 +13,8 @@
 - keil5 打开工程
 - JLINK 烧录代码 
 - 接线方式： 
-    DS1302： RST （PA5）  IO（ PA6）  SCK （PA7） +5V 供电
+    DS1302： RST （PA5）  IO（ PA6）  SCK （PA7） +5V 供电 
+    
     舵机： 左臂（PC6） 右臂（PC7） 抬臂（PC8） +5V供电
 - 机架安装： 淘宝上找Plotclock机架 30~40应该就买的到
 
